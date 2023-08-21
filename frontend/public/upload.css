@@ -1,0 +1,124 @@
+/* Grey color - #606060a6 */
+
+.pngAndJpg,
+.uploadYourImages {
+  margin: 0;
+  position: absolute;
+  left: calc(50% - 286.5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 573px;
+}
+
+.uploadYourImages {
+  font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  top: calc(50% - 62.5px);
+  font-weight: 500;
+  height: 100px;
+}
+/*  */
+.pngAndJpg {
+  font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  top: calc(50% + 7.5px);
+  font-size: medium;
+  color: #606060a6;
+  height: 55px;
+}
+
+.frameChild,
+.uploadYourImagesParent {
+  position: absolute;
+  top: 52px;
+  left: 152px;
+  width: 573px;
+  height: 125px;
+}
+
+.frameChild {
+  top: 0;
+  opacity: 0%;
+  left: 0;
+  border-radius: var(--br-29xl);
+  border: 1px dashed var(--color-gray-100);
+  box-sizing: border-box;
+  width: 650px;
+  height: 345px;
+  cursor: pointer;
+}
+
+.dragAndDrop {
+  font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  pointer-events: none;
+  margin: 0;
+  font-weight: normal;
+  position: absolute;
+  top: calc(50% + 72.61px);
+  left: calc(50% - 286px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 573px;
+  height: 55px;
+  color: #606060a6;
+}
+
+.groupIcon {
+  pointer-events: none;
+  position: absolute;
+  height: 39.63%;
+  width: 20.98%;
+  top: 18.83%;
+  right: 39.44%;
+  bottom: 41.54%;
+  left: 39.58%;
+  max-width: 100%;
+  overflow: hidden;
+  max-height: 100%;
+  mix-blend-mode: normal;
+}
+
+.rectangleParent {
+  box-sizing: border-box;
+  border-radius: var(--br-29xl);
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+  border: 1px dashed var(--color-gray-100);
+  position: absolute;
+  top: 243px;
+  left: 114px;
+  width: 648px;
+  height: 343px;
+  font-size: var(--font-size-xl);
+  overflow: hidden;
+  background-color: #ebf9ff;
+}
+
+.frame {
+  position: relative;
+  left: 300px;
+  border-radius: var(--br-29xl);
+  background: linear-gradient(45deg, #56cbf255, #2F80ED77);
+  box-sizing: border-box;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  width: 878px;
+  height: 685px;
+  overflow: hidden;
+  scale: 0.75;
+}
+
+.desktop1 {
+  position: relative;
+  background-color: #fff;
+  overflow: hidden;
+  text-align: center;
+  font-size: 40px;
+  color: #000;
+  font-family: var(--font-roboto);
+}
+
+.submitBtn {
+  z-index: 100;
+  position: absolute;
+  margin: auto;
+  top: 300px;
+}

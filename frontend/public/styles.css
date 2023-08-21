@@ -1,0 +1,55 @@
+body{
+ background-color: #f6e7fc;
+ 
+}
+
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: left;
+}
+/*  */
+.card {
+  position: relative;
+  width: 350px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-title {
+  font-weight: bold;
+}
+
+.card-body {
+  padding: 1rem; /* Add padding to the card body */
+}
+
+.delete-icon {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  color: #302c2c;
+  font-size: 1.2rem;
+  opacity: 0.5;
+  transition: opacity 0.3s;
+  /* Circular grey background on hover for the trash icon */
+  background-color: grey;
+  width: 45px; /* Set the width and height to the same value to ensure a perfect circle */
+  height: 45px;
+  display: flex; /* Center the trash icon within the circular background */
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  padding: 8px;
+}
+
+
+.delete-icon:hover {
+  opacity: 1; /* Highlight the trash icon on hover */
+}

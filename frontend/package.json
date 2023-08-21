@@ -1,0 +1,59 @@
+{
+    "name": "storiez",
+    "version": "0.1.0",
+    "private": true,
+    "proxy": "http://localhost:3000",
+    "dependencies": {
+        "@cloudinary/react": "^1.11.2",
+        "@cloudinary/url-gen": "^1.11.0",
+        "@testing-library/jest-dom": "^5.16.5",
+        "@testing-library/react": "^13.4.0",
+        "@testing-library/user-event": "^13.5.0",
+        "@types/jest": "^29.5.0",
+        "@types/node": "^16.11.14",
+        "@types/react": "^18.0.28",
+        "@types/react-dom": "^18.0.11",
+        "axios": "^1.4.0",
+        "cloudinary": "^1.40.0",
+        "cors": "^2.8.5",
+        "crypto-browserify": "^3.12.0",
+        "deepai": "^1.0.23",
+        "https-browserify": "^1.0.0",
+        "os-browserify": "^0.3.0",
+        "path-browserify": "^1.0.1",
+        "querystring-es3": "^0.2.1",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-router-dom": "^6.2.1",
+        "react-scripts": "5.0.1",
+        "react-spring": "^9.7.2",
+        "stream-browserify": "^3.0.0",
+        "stream-http": "^3.2.0",
+        "url": "^0.11.1",
+        "web-vitals": "^2.1.4"
+    },
+    "scripts": {
+        "start": "set PORT=3006 && react-scripts start",
+        "build": "PORT=3006 react-scripts build",
+        "test": "PORT=3006 react-scripts test",
+        "eject": "PORT=3006 react-scripts eject"
+    },
+    "eslintConfig": {
+        "root": true
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "devDependencies": {
+        "babel-eslint": "^10.1.0"
+    }
+}

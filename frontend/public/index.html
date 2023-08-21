@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Storiez</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <link id="main-css" rel="stylesheet" type="text/css" href="./styles.css">
+  <link id="main-css2" rel="stylesheet" type="text/css" href="./header.css">
+  <script>
+    window.addEventListener("DOMContentLoaded", function() {
+      const dynamicCSSLink = document.getElementById("main-css");
+      const dynamicCSSLink2 = document.getElementById("main-css2");
+
+      function updateCSS() {
+        const currentURL = window.location.href;
+        if (currentURL.includes("localhost:3006/user")) {
+          console.log("I am in user");
+          dynamicCSSLink.href = "./styles2.css";
+        }
+        else if (currentURL.includes("localhost:3006/upload")) {
+          console.log("I am in upload page");
+          dynamicCSSLink.href = "./upload.css";
+          dynamicCSSLink2.href = "./header.css";
+        } else {
+          console.log("I am in some other page");
+          dynamicCSSLink.href = "./styles.css";
+          dynamicCSSLink2.href = "./header.css";
+        }
+      }
+      updateCSS();
+      window.addEventListener("popstate", updateCSS);
+    });
+  </script>
+</head>
+
+<body>
+  <div id="root">
+  </div>
+  <script src="https://kit.fontawesome.com/9a5b5fe192.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+</body>
+<!--  -->
+</html>
