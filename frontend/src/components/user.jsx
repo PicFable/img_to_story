@@ -3,7 +3,7 @@ import SignInForm from "./SignIn";
 import SignUpForm from "./SignUp";
 import "../pages/styles2.module.css";
 
-export default function User() {
+function User() {
   const [type, setType] = useState("signIn");
   const handleOnClick = (text) => {
     if (text !== type) {
@@ -52,3 +52,5 @@ export default function User() {
   );
 }
 // 
+
+export default User;

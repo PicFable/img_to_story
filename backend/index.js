@@ -1,21 +1,20 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const axios = require("axios");
 const bodyParser = require("body-parser");
-let localStorage = require('local-storage');
-const cloudinary = require("cloudinary").v2;
-const fse = require("fs-extra");
-
-require("dotenv").config();
-
-const connectToMongo = require("./mongoconnect");
-connectToMongo();
-
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+const connectToMongo = require("./mongoconnect");
+connectToMongo();
 app.use(express.json());
+app.use("/auth", require("./routes/auth"));
+app.use("/stories", require("./routes/stories"));
+let localStorage = require('local-storage');
+
+require("dotenv").config();
+const cloudinary = require("cloudinary").v2;
+const fse = require("fs-extra");
 app.use(express.static("public"));
 app.use(express.json());
 app.use(
@@ -23,10 +22,6 @@ app.use(
     extended: false,
   })
 );
-
-
-app.use("/auth", require("./routes/auth"));
-app.use("/stories", require("./routes/stories"));
 
 const cloudinaryConfig = cloudinary.config({
   cloud_name: process.env.CLOUDNAME,
@@ -44,7 +39,7 @@ function passwordProtected(req, res, next) {
   }
 }
 
-app.use(passwordProtected);
+// app.use(passwordProtected);
 
 app.get("/", (req, res) => {
   res.send(`<!DOCTYPE html>
@@ -73,7 +68,7 @@ app.get("/", (req, res) => {
 </html>`);
 });
 
-app.get("/get-signature", (req, res) => {
+app.get("/get-signature", cors(), (req, res) => {
   const timestamp = Math.round(new Date().getTime() / 1000);
   const signature = cloudinary.utils.api_sign_request(
     {
@@ -87,7 +82,7 @@ app.get("/get-signature", (req, res) => {
   });
 });
 
-app.post("/do-something-with-photo", async (req, res) => {
+app.post("/do-something-with-photo", cors(), async (req, res) => {
   // based on the public_id and the version that the (potentially malicious) user is submitting...
   // we can combine those values along with our SECRET key to see what we would expect the signature to be if it was innocent / valid / actually coming from Cloudinary
   const expectedSignature = cloudinary.utils.api_sign_request(
@@ -110,7 +105,7 @@ app.post("/do-something-with-photo", async (req, res) => {
       ".jpg";
     // To get the title from the picture
     async function query(url) {
-      const response = await axios.post(
+      const response = await fetch(
         "https://api-inference.huggingface.co/models/Salesforce/blip-image-captioning-large",
         {
           headers: {
@@ -126,7 +121,7 @@ app.post("/do-something-with-photo", async (req, res) => {
     }
     // To get the story from the title
     async function queryforstory(data) {
-      const response = await axios.post(
+      const response = await fetch(
         "https://api-inference.huggingface.co/models/aspis/gpt2-genre-story-generation",
         {
           headers: {
@@ -142,8 +137,10 @@ app.post("/do-something-with-photo", async (req, res) => {
 
     const imageUrl = mainUrl;
     const titleResponse = await query(imageUrl);
+    console.log(titleResponse[0].generated_text);
     const title = titleResponse[0].generated_text;
     const storyResponse = await queryforstory(title);
+     console.log(storyResponse[0].generated_text);
     const story = storyResponse[0].generated_text;
 
     const postData = {
@@ -153,13 +150,13 @@ app.post("/do-something-with-photo", async (req, res) => {
     };
 
     try {
-      const response = await axios.post("http://localhost:3000/stories/poststory", {
+      const response = await fetch("http://localhost:3000/stories/poststory", {
         method: "POST",
         headers: {
           "auth-token": localStorage.get("token"), // If authentication is required
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(postData)
+        body: JSON.stringify(postData),
       });
 
       if (response.ok) {
@@ -173,35 +170,34 @@ app.post("/do-something-with-photo", async (req, res) => {
     } catch (error) {
       console.error("An error occurred:", error);
       // Handle network errors here
-      //
     }
   }
 });
 
-app.get("/view-photos", async (req, res) => {
+app.get("/view-photos", cors(), async (req, res) => {
   await fse.ensureFile("data.txt");
   const existingData = await fse.readFile("data.txt", "utf8");
   res.send(`<h1>Hello, here are a few photos...</h1>
   <ul>
   ${existingData
-      .split("\n")
-      .filter((item) => item)
-      .map((id) => {
-        return `<li><img src="https://res.cloudinary.com/dcrchug4p/image/upload/w_200,h_100,c_fill,q_100/${id}.jpg">
+    .split("\n")
+    .filter((item) => item)
+    .map((id) => {
+      return `<li><img src="https://res.cloudinary.com/dcrchug4p/image/upload/w_200,h_100,c_fill,q_100/${id}.jpg">
       <form action="delete-photo" method="POST">
         <input type="hidden" name="id" value="${id}" />
         <button>Delete</button>
       </form>
       </li>
       `;
-      })
-      .join("")}
+    })
+    .join("")}
   </ul>
   <p><a href="/">Back to homepage</a></p>
   `);
 });
 
-app.post("/delete-photo", async (req, res) => {
+app.post("/delete-photo", cors(), async (req, res) => {
   // do whatever you need to do in your database etc...
   await fse.ensureFile("data.txt");
   const existingData = await fse.readFile("data.txt", "utf8");
@@ -216,36 +212,50 @@ app.post("/delete-photo", async (req, res) => {
   res.redirect("/view-photos");
 });
 
-app.post("/upload-photo", async (req, res) => {
+
+var fileupload = require("express-fileupload");
+app.use(fileupload());
+
+app.post("/upload-photo", cors(), async (req, res) => {
   const api_key = "215246828679776";
   const cloud_name = "dcrchug4p";
-  const signatureResponse = await axios.get("/get-signature");
-  const data = new FormData();
-  data.append("file", req.body.files[0]);
-  data.append("api_key", api_key);
-  data.append("signature", signatureResponse.data.signature);
-  data.append("timestamp", signatureResponse.data.timestamp);
-  const cloudinaryResponse = await axios.post(
-    `https://api.cloudinary.com/v1_1/${cloud_name}/auto/upload`,
-    data,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      onUploadProgress: function (e) {
-        console.log(e.loaded / e.total);
-      },
-    }
+  const signatureResponse = await fetch("http://localhost:3000/get-signature").then((response) =>
+    response.json()
   );
-  console.log(cloudinaryResponse.data);
+  const data = new FormData();
+  data.append("file", req.files);
+  data.append("api_key", api_key);
+  data.append("signature", signatureResponse.signature);
+  data.append("timestamp", signatureResponse.timestamp);
+  const cloudinaryResponse = await fetch(
+    `https://api.cloudinary.com/v1_1/${cloud_name}/auto/upload`,
+    {
+      method: "POST",
+      body: data,
+    }
+  ).then((response) => response.json());
+  console.log(cloudinaryResponse);
 
   const photoData = {
-    public_id: cloudinaryResponse.data.public_id,
-    version: cloudinaryResponse.data.version,
-    signature: cloudinaryResponse.data.signature,
+    public_id: cloudinaryResponse.public_id,
+    version: cloudinaryResponse.version,
+    signature: cloudinaryResponse.signature,
   };
 
-  axios.post("/do-something-with-photo", photoData);
+  fetch("http://localhost:3000/do-something-with-photo", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(photoData),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      // Handle the response data
+    })
+    .catch((error) => {
+      console.error("An error occurred:", error);
+    });
 });
 
 app.listen(3000, () =>

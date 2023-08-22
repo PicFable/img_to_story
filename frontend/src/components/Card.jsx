@@ -12,7 +12,7 @@ function Card(props) {
     transform: isHovered ? "scale(1.05)" : "scale(1)",
   });
 
-  function f() {
+  function DeleteCard() {
     const id = props.id;
     const url = `http://localhost:3000/stories/deletestory/${id}`;
     fetch(url, {
@@ -61,7 +61,7 @@ function Card(props) {
 
         <p className="card-text">{props.content}</p>
         <div className="delete-icon">
-          <i onClick={f} className="fa-solid fa-trash fa-xl "></i>
+          <i onClick={DeleteCard} className="fa-solid fa-trash fa-xl "></i>
         </div>
       </div>
     </animated.div>

@@ -9,7 +9,7 @@ document
         const data = new FormData();
         data.append("file", document.querySelector("#file-field").files[0]);
         data.append("api_key", api_key);
-        data.append("signature", signatureResponse.data.signature);
+        data.append("signature", signatureResponse.data.signature); 
         data.append("timestamp", signatureResponse.data.timestamp);
         const cloudinaryResponse = await axios.post(
             `https://api.cloudinary.com/v1_1/${cloud_name}/auto/upload`,
@@ -25,10 +25,10 @@ document
         console.log(cloudinaryResponse.data);
 
         const photoData = {
-            pubon,lic_id: cloudinaryResponse.data.public_id,
-            version: cloudinaryResponse.data.versi,
+            public_id: cloudinaryResponse.data.public_id,
+            version: cloudinaryResponse.data.version,
             signature: cloudinaryResponse.data.signature,
         };
-        // index.js
+        
         axios.post("/do-something-with-photo", photoData);
     });
