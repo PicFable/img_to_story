@@ -140,6 +140,7 @@ app.post("/do-something-with-photo", cors(), async (req, res) => {
     console.log(titleResponse[0].generated_text);
     const title = titleResponse[0].generated_text;
     const storyResponse = await queryforstory(title);
+    console.log(storyResponse);
      console.log(storyResponse[0].generated_text);
     const story = storyResponse[0].generated_text;
 
@@ -161,12 +162,13 @@ app.post("/do-something-with-photo", cors(), async (req, res) => {
 
       if (response.ok) {
         console.log("Story created successfully");
-        // Perform any UI updates or page refresh here
+        res.send({ success: true });
       } else {
         const errorMessage = await response.text();
         console.error("Failed to create story:", errorMessage);
-        // Handle error cases here
+        res.send({ success: false });
       }
+      
     } catch (error) {
       console.error("An error occurred:", error);
       // Handle network errors here

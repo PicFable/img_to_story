@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import Header from "./Header";
+import axios from 'axios';
 
 function Upload() {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const api_key = "215246828679776";
+  const cloud_name = "dcrchug4p";
 
   const handleChange = (e) => {
     const file = e.target.files[0];
@@ -13,25 +17,46 @@ function Upload() {
     e.preventDefault();
 
     if (selectedFile) {
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-
       try {
-        const response = await fetch("http://localhost:3000/upload-photo", {
-          method: "POST",
-          body: formData,
-        });
+        setUploadProgress(0);
+        const signatureResponse = await axios.get("/get-signature");
+        const data = new FormData();
+        data.append("file", selectedFile);
+        data.append("api_key", api_key);
+        data.append("signature", signatureResponse.data.signature); 
+        data.append("timestamp", signatureResponse.data.timestamp);
+        const cloudinaryResponse = await axios.post(
+            `https://api.cloudinary.com/v1_1/${cloud_name}/auto/upload`,
+            data, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                },
+                onUploadProgress: function(e) {
+                    setUploadProgress(e.loaded / e.total);
+                },
+            }
+        );
+        console.log(cloudinaryResponse.data);
 
-        if (response.ok) {
-          console.log("File uploaded successfully");
-          // Perform any UI updates or actions after successful upload
-        } else {
-          console.error("Failed to upload file");
-          // Handle error cases here
-        }
+        const photoData = {
+            public_id: cloudinaryResponse.data.public_id,
+            version: cloudinaryResponse.data.version,
+            signature: cloudinaryResponse.data.signature,
+        };
+        
+        axios.post("/do-something-with-photo", photoData)
+        .then((response) => {
+          if (response.data.success) {
+            window.location.href = "http://localhost:3006/app";
+          }
+        })
+        .catch((error) => {
+          console.error("An error occurred:", error);
+        });
+      
+
       } catch (error) {
         console.error("An error occurred:", error);
-        // Handle network errors here
       }
     }
   };
@@ -43,6 +68,11 @@ function Upload() {
         <div className="uploadYourImagesParent text-center">
           <p className="uploadYourImages">Upload your images</p>
           <p className="pngAndJpg">PNG and JPG files are allowed</p>
+          {uploadProgress > 0 && (
+            <div>
+              Uploading... {Math.round(uploadProgress * 100)}%
+            </div>
+          )}
         </div>
         <div className="rectangleParent">
           <form
