@@ -35,7 +35,7 @@ function Card(props) {
   }
 // 
   return (
-    <animated.div
+    <div
       className="card m-5"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -64,7 +64,7 @@ function Card(props) {
           <i onClick={DeleteCard} className="fa-solid fa-trash fa-xl "></i>
         </div>
       </div>
-    </animated.div>
+    </div>
   );
 }
 

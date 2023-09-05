@@ -26,9 +26,8 @@ function Main() {
   return (
    <>
    <Header />
-   <div className='container mt-5'>
    {data ? (
-        <div className='d-flex align-items-start'>
+        <div className='card-container mt-3 d-flex align-items-start'>
           {data.map((item) => (
             <div key={item._id}>
               {console.log(item._id)}
@@ -39,7 +38,7 @@ function Main() {
       ) : (
         <p>Loading...</p>
       )}
-   </div>
+
    <div className='text-center'>
    <button onClick={() => window.location.href="http://localhost:3006/upload"} className='text-center'>Post Story</button>
    </div>

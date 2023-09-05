@@ -8,12 +8,14 @@ body{
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-  justify-content: left;
+  justify-content: center;
+  margin: auto;
 }
 /*  */
 .card {
   position: relative;
   width: 350px;
+  height: 450px;
   margin: 5px;
   cursor: pointer;
   border-radius: 10px;
